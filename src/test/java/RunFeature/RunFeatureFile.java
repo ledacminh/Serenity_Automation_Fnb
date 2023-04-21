@@ -9,7 +9,8 @@ import org.junit.runner.RunWith;
         snippets = CucumberOptions.SnippetType.CAMELCASE,
         features = {"classpath:features"},
         monochrome = false,
-        glue = {"helpers", "stepsDefinitions"}
+        glue = {"helpers", "stepsDefinitions"},
+        plugin = {"pretty", "html:target/cucumber-html-report.html", "json:target/cucumber.json"}
 )
 public class RunFeatureFile {
 
