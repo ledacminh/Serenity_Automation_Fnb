@@ -1,6 +1,6 @@
 package interfaces;
 
-public class LoginIUI {
+public class LoginUI {
     public static final String TEN_GIAN_HANG = "//input[@placeholder='Tên gian hàng']";
     public static final String TEN_DANG_NHAP = "//input[@placeholder='Tên đăng nhập']";
     public static final String MAT_KHAU = "//input[@placeholder='Mật khẩu']";

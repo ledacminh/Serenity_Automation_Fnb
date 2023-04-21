@@ -1,14 +1,6 @@
-package steps.commons;
+package commons;
 
-import commons.GlobalConstants;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -22,72 +14,6 @@ public class BasePage {
     private JavascriptExecutor javascriptExecutor;
     private Actions actions;
     private WebDriverWait explicit;
-    private static final ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
-
-    private enum BROWSER {
-        CHROME, EDGE, FIREFOX, HCHROME, HEDGE, HFIREFOX
-    }
-
-    private enum ENVIRONMENT {
-        DEV, TESTING, STAGING, PRODUCTION
-    }
-
-    public WebDriver getBrowserDriver(String browserName) {
-        BROWSER browser = BROWSER.valueOf(browserName.toUpperCase());
-        switch (browser) {
-            case CHROME:
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("--remote-allow-origins=*");
-                driver.set(new ChromeDriver(chromeOptions));
-                break;
-            case EDGE:
-                WebDriverManager.edgedriver().setup();
-                EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--remote-allow-origins=*");
-                driver.set(new EdgeDriver(edgeOptions));
-                break;
-            case FIREFOX:
-                WebDriverManager.firefoxdriver().setup();
-                driver.set(new FirefoxDriver());
-                break;
-            case HEDGE:
-                edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless");
-                edgeOptions.setHeadless(true);
-                WebDriverManager.edgedriver().setup();
-                driver.set(new EdgeDriver(edgeOptions));
-                break;
-            case HCHROME:
-                chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("--headless");
-                chromeOptions.setHeadless(true);
-                WebDriverManager.chromedriver().setup();
-                driver.set(new ChromeDriver(chromeOptions));
-                break;
-            case HFIREFOX:
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                firefoxOptions.addArguments("--headless");
-                firefoxOptions.setHeadless(true);
-                WebDriverManager.firefoxdriver().setup();
-                driver.set(new FirefoxDriver(firefoxOptions));
-                break;
-            default:
-                throw new RuntimeException("Please enter correct browser name");
-        }
-        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
-        driver.get().manage().window().maximize();
-        //driver.get().get(GlobalConstants.PROJECT_URL);
-        return driver.get();
-    }
-
-    public void closeBrowser(WebDriver driver) {
-        driver.quit();
-    }
-
-    public static WebDriver getDriver() {
-        return driver.get();
-    }
 
     public By getXpath(String locator) {
         return By.xpath(locator);
@@ -468,5 +394,11 @@ public class BasePage {
     public boolean isDiplayElements(WebDriver driver, String locator, String... params) {
         waitForElementIsVisible(driver, locator, params);
         return getDynamicElement(driver, locator, params).isDisplayed();
+    }
+
+    public void getBrowser(WebDriver driver) {
+        driver.get(GlobalConstants.PROJECT_URL);
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 }
